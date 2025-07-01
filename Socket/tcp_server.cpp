@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 
     char message[1024] = "Hello, Client!";
 
-    if(argc != 2) {
+    if(argc != 2) { 
         std::cerr << "Usage: " << argv[0] << " <port>" << std::endl;
         exit(1);
     }
