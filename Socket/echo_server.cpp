@@ -49,16 +49,16 @@ int main(int argc, char *argv[]) {
     // Accept a client connection
     for(int i = 0; i < 5; i++) {
         client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_size);
-        
+
         if (client_socket == -1) {
             std::cerr << "Error accepting connection" << std::endl;
             exit(1);
         } else {
-            std::cout << "Client connected" << i << std::endl;
+            std::cout << "Client connected：" << i+1 << std::endl;
         }
 
-        while(str_len = read(client_socket, message, BUFFER_SIZE-1) != 0) {
-            write(client_socket, message, strlen(message));
+        while((str_len = read(client_socket, message, BUFFER_SIZE-1)) != 0) {
+            write(client_socket, message, str_len);  //写回的长度应该直接使用 read的返回值而不是 strlen(message)
         }
         close(client_socket);
     }
