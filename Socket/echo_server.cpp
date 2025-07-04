@@ -10,6 +10,7 @@ int main(int argc, char *argv[]) {
 
     int server_socket, client_socket;
     char message[BUFFER_SIZE];
+    int str_len; // 接受信息的长度
 
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_addr_size;
@@ -32,13 +33,13 @@ int main(int argc, char *argv[]) {
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
     // Bind socket
-    if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+    if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
         std::cerr << "Error binding socket" << std::endl;
         exit(1);
     }
 
     // Listen for incoming connections
-    if (listen(server_socket, 5) < 0) {
+    if (listen(server_socket, 5) == -1) {
         std::cerr << "Error listening on socket" << std::endl;
         exit(1);
     }
@@ -46,14 +47,21 @@ int main(int argc, char *argv[]) {
     client_addr_size = sizeof(client_addr);
 
     // Accept a client connection
-    client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_size);
-    if (client_socket < 0) {
-        std::cerr << "Error accepting connection" << std::endl;
-        exit(1);
-    }
+    for(int i = 0; i < 5; i++) {
+        client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_size);
+        
+        if (client_socket == -1) {
+            std::cerr << "Error accepting connection" << std::endl;
+            exit(1);
+        } else {
+            std::cout << "Client connected" << i << std::endl;
+        }
 
-    write(client_socket, message, strlen(message));
-    close(client_socket);
+        while(str_len = read(client_socket, message, BUFFER_SIZE-1) != 0) {
+            write(client_socket, message, strlen(message));
+        }
+        close(client_socket);
+    }
     close(server_socket);
     return 0;
 }
