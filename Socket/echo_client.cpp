@@ -41,12 +41,22 @@ int main(int argc, char *argv[]) {
         if(!strcmp(message, "Q\n") || !strcmp(message, "q\n")) {
             break;
         }
-        write(sock, message, strlen(message));
-        str_len = read(sock, message, sizeof(message) - 1);
-        message[str_len] = 0;
-        std::cout << "Message from server : " << message << std::endl;
-    }
+        str_len = write(sock, message, strlen(message));
 
+         int recv_len = 0;
+        while(recv_len < str_len) {
+            int recv_cnt = read(sock, &message[recv_len], BUFFER_SIZE-1);
+            if(recv_cnt == -1) {
+                std::cout << "read() error" << std::endl;
+                exit(1);
+            }
+            recv_len += recv_cnt;
+        }
+        // write(sock, message, strlen(message));
+        // str_len = read(sock, message, sizeof(message) - 1);  //message不会被清空但是会被覆盖 
+        message[str_len] = 0;   //确保字符串以null结尾 不会发生输出失败
+        std::cout << "Message from server : " << message << std::endl;  
+    }
     close(sock);
     return 0; 
 }
