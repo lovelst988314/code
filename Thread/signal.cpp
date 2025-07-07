@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 3; i++) {
         puts("wait...");
         sleep(100);
+        std:: cout << i << std::endl;
     }
 
     return 0;
