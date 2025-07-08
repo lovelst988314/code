@@ -64,8 +64,7 @@ int main(int argc, char *argv[]) {
         client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_size);
 
         if (client_socket == -1) {
-            std::cerr << "Error accepting connection" << std::endl;
-            exit(1);
+            continue;
         } else {
             std::cout << "Client connected：" << std::endl;
         }
@@ -86,8 +85,6 @@ int main(int argc, char *argv[]) {
         } else {
             close(client_socket);
         }
-        close(server_socket);
-        return 0;
     }
     close(server_socket);
     return 0;
