@@ -29,7 +29,7 @@ int main (int argc, char **argv) {
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
 
-    accept_sock = socket(PF_INET, SOCK_STREAM, 0);
+    accept_sock = socket(PF_INET, SOCK_STREAM, 0);   //accept_sock对应recv_adr
     if(accept_sock == -1) {
         std::cerr << "socket() error" << std::endl;
         exit(1);
@@ -54,7 +54,7 @@ int main (int argc, char **argv) {
     serv_adr_sz = sizeof(serv_adr);
     recv_sock = accept(accept_sock, (struct sockaddr*)&serv_adr, &serv_adr_sz);
 
-    fcntl(recv_sock, F_SETOWN, getpid());
+    fcntl(recv_sock, F_SETOWN, getpid());  // 表示将当前进程设为recv_sock上紧急数据到达时的通知目标。
     state = sigaction(SIGURG, &act, 0);
 
     while((str_len = recv(recv_sock, buffer, BUFFER_SIZE, 0)) != 0) {
