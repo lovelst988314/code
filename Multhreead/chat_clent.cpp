@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    std::cout << "name : " << argv[3] << std::endl;
+    sprintf(name ,"[%s]", argv[3]);
 
     sock = socket(PF_INET, SOCK_STREAM, 0);
     if (sock == -1) {
@@ -59,7 +59,7 @@ void *send_msg(void *socket) {
             close(sock);
             exit(0);
         }
-        std::cout << "name_msg : " << name << msg << std::endl;
+        sprintf(name_msg ,"%s %s", name, msg);
         write(sock, name_msg, strlen(name_msg));
     }
     return NULL;

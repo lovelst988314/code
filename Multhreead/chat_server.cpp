@@ -77,11 +77,11 @@ void* handle_clnt(void* arg) {
     int str_len = 0;
     char msg[BUF_SIZE];
 
-    while ((str_len = read(clnt_sock, msg, sizeof(msg))) != 0) {
+    while ((str_len = read(clnt_sock, msg, sizeof(msg))) != 0) 
         send_msg(msg, str_len);
         pthread_mutex_lock(&mutx);
         for (int i = 0; i < clnt_cnt; i++) {
-            if (clnt_socks[i] != clnt_sock) {
+            if (clnt_socks[i] == clnt_sock) {
                 while(i++ < clnt_cnt-1) clnt_socks[i] = clnt_socks[i+1];
                 break;
             }
@@ -90,7 +90,7 @@ void* handle_clnt(void* arg) {
         pthread_mutex_unlock(&mutx);
         close(clnt_sock);
         return NULL;
-    }
+    
 }
 
 void send_msg(char * msg, int len) {
